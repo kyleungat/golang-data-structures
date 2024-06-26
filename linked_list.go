@@ -34,11 +34,37 @@ func (list *LinkedList[T]) Add(value T, index ...int) {
 
 }
 
-// boolean	addAll(Collection<? extends E> c)
+// void	addAll(Collection<? extends E> c)
 // Appends all of the elements in the specified collection to the end of this list, in the order that they are returned by the specified collection's iterator.
-
-// boolean	addAll(int index, Collection<? extends E> c)
-// Inserts all of the elements in the specified collection into this list, starting at the specified position.
+func (list *LinkedList[T]) AddAll(value []T, index ...int) {
+	insert := -1
+	if len(index) == 1 && index[0] >= 0 {
+		insert = index[0]
+	}
+	for i, current := 0, list.firstNode; current != nil; i, current = i+1, current.next {
+		if i == insert {
+			nextNodeBeforeInsert := current.next
+			for _, v := range value {
+				nextNode := &node[T]{
+					value: v,
+				}
+				current.next = nextNode
+				current = current.next
+			}
+			current.next = nextNodeBeforeInsert
+			break
+		}
+		if current.next == nil {
+			for _, v := range value {
+				nextNode := &node[T]{
+					value: v,
+				}
+				current.next = nextNode
+				current = current.next
+			}
+		}
+	}
+}
 
 // void	addFirst(E e)
 // Inserts the specified element at the beginning of this list.
@@ -63,9 +89,17 @@ func (list *LinkedList[T]) AddLast(value T) {
 
 // void	clear()
 // Removes all of the elements from this list.
+func (list *LinkedList[T]) Clear() {
+	list.firstNode = nil
+}
 
 // Object	clone()
 // Returns a shallow copy of this LinkedList.
+func (list *LinkedList[T]) Clone() LinkedList[T] {
+	return LinkedList[T]{
+		firstNode: list.firstNode,
+	}
+}
 
 // boolean	contains(Object o)
 // Returns true if this list contains the specified element.
@@ -78,9 +112,6 @@ func (list *LinkedList[T]) Ccontains(value T) bool {
 	}
 	return exist
 }
-
-// Iterator<E>	descendingIterator()
-// Returns an iterator over the elements in this deque in reverse sequential order.
 
 // E	get(int index)
 // Returns the element at the specified position in this list.
@@ -98,7 +129,7 @@ func (list *LinkedList[T]) Get(index int) *T {
 
 // E	getFirst()
 // Returns the first element in this list.
-func (list *LinkedList[T]) GetFirst(index int) *T {
+func (list *LinkedList[T]) GetFirst() *T {
 	if list.firstNode != nil {
 		return &list.firstNode.value
 	}
@@ -107,7 +138,7 @@ func (list *LinkedList[T]) GetFirst(index int) *T {
 
 // E	getLast()
 // Returns the last element in this list.
-func (list *LinkedList[T]) GetLast(index int) *T {
+func (list *LinkedList[T]) GetLast() *T {
 	for current := list.firstNode; current != nil; current = current.next {
 		if current.next == nil {
 			return &current.value
@@ -139,17 +170,17 @@ func (list *LinkedList[T]) LastIndexOf(value T) int {
 	return index
 }
 
-// ListIterator<E>	listIterator(int index)
-// Returns a list-iterator of the elements in this list (in proper sequence), starting at the specified position in the list.
-
-// E	peek()
-// Retrieves, but does not remove, the head (first element) of this list.
-
 // E	peekFirst()
 // Retrieves, but does not remove, the first element of this list, or returns null if this list is empty.
+func (list *LinkedList[T]) PeekFirst() *T {
+	return list.GetFirst()
+}
 
 // E	peekLast()
 // Retrieves, but does not remove, the last element of this list, or returns null if this list is empty.
+func (list *LinkedList[T]) PeekLast() *T {
+	return list.GetLast()
+}
 
 // E	remove(int index)
 // Removes the element at the specified position in this list.
@@ -166,12 +197,20 @@ func (list *LinkedList[T]) Remove(index int) {
 	}
 }
 
-// boolean	remove(Object o)
+// removeValue(Object o)
 // Removes the first occurrence of the specified element from this list, if it is present.
+func (list *LinkedList[T]) RemoveValue(value T) {
+	for current := list.firstNode; current != nil; current = current.next {
+		if current.next != nil && current.next.value == value {
+			current.next = current.next.next
+			break
+		}
+	}
+}
 
 // E	removeFirst()
 // Removes and returns the first element from this list.
-func (list *LinkedList[T]) RemoveFirst(value T) *T {
+func (list *LinkedList[T]) RemoveFirst() *T {
 	var result *T
 	if list.firstNode == nil {
 		return result
@@ -181,12 +220,15 @@ func (list *LinkedList[T]) RemoveFirst(value T) *T {
 	return result
 }
 
-// boolean	removeFirstOccurrence(Object o)
+// removeFirstOccurrence(Object o)
 // Removes the first occurrence of the specified element in this list (when traversing the list from head to tail).
+func (list *LinkedList[T]) RemoveFirstOccurrence(value T) {
+	list.Remove(list.IndexOf(value))
+}
 
 // E	removeLast()
 // Removes and returns the last element from this list.
-func (list *LinkedList[T]) RemoveLast(value T) *T {
+func (list *LinkedList[T]) RemoveLast() *T {
 	var result *T
 	if list.firstNode == nil {
 		return result
@@ -201,8 +243,11 @@ func (list *LinkedList[T]) RemoveLast(value T) *T {
 	return result
 }
 
-// boolean	removeLastOccurrence(Object o)
+// removeLastOccurrence(Object o)
 // Removes the last occurrence of the specified element in this list (when traversing the list from head to tail).
+func (list *LinkedList[T]) RemoveLastOccurrence(value T) {
+	list.Remove(list.LastIndexOf(value))
+}
 
 // E	set(int index, E element)
 // Replaces the element at the specified position in this list with the specified element.
@@ -224,9 +269,6 @@ func (list *LinkedList[T]) Size(value T) int {
 	}
 	return 0
 }
-
-// Spliterator<E>	spliterator()
-// Creates a late-binding and fail-fast Spliterator over the elements in this list.
 
 // Object[]	toArray()
 // Returns an array containing all of the elements in this list in proper sequence (from first to last element).

@@ -1,0 +1,12 @@
+Add
+The syntx of multiple initializations and post-processing of for loop in golang
+
+AddLast
+The condition in the loop is wrong
+
+clear
+Assign the first Node to nil will remove the reference holding it and the rest of the nodes
+would be handled by the gc.
+
+clone
+The shallow copy and the deep copy in linked list.
