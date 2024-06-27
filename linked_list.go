@@ -49,6 +49,25 @@ func (list *LinkedList[T]) AddAll(value []T, index ...int) {
 	if len(index) == 1 && index[0] >= 0 {
 		insert = index[0]
 	}
+
+	if len(value) <= 0 {
+		return
+	}
+
+	if list.firstNode == nil {
+		list.firstNode = &node[T]{
+			value: value[0],
+		}
+		if len(value) > 1 {
+			for i, current := 1, list.firstNode; i < len(value); i, current = i+1, current.next {
+				current.next = &node[T]{
+					value: value[i],
+				}
+			}
+		}
+		return
+	}
+
 	for i, current := 0, list.firstNode; current != nil; i, current = i+1, current.next {
 		if i == insert {
 			nextNodeBeforeInsert := current.next
@@ -60,7 +79,7 @@ func (list *LinkedList[T]) AddAll(value []T, index ...int) {
 				current = current.next
 			}
 			current.next = nextNodeBeforeInsert
-			break
+			return
 		}
 		if current.next == nil {
 			for _, v := range value {
@@ -70,6 +89,7 @@ func (list *LinkedList[T]) AddAll(value []T, index ...int) {
 				current.next = nextNode
 				current = current.next
 			}
+			return
 		}
 	}
 }
