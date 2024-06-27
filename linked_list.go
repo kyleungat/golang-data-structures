@@ -138,7 +138,7 @@ func (list *LinkedList[T]) Clone() LinkedList[T] {
 
 // boolean	contains(Object o)
 // Returns true if this list contains the specified element.
-func (list *LinkedList[T]) Ccontains(value T) bool {
+func (list *LinkedList[T]) Contains(value T) bool {
 	var exist bool
 	for current := list.firstNode; current != nil; current = current.next {
 		if current.value == value {
