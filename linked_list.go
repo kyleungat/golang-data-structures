@@ -106,11 +106,18 @@ func (list *LinkedList[T]) AddFirst(value T) {
 // void	addLast(E e)
 // Appends the specified element to the end of this list.
 func (list *LinkedList[T]) AddLast(value T) {
+	if list.firstNode == nil {
+		list.firstNode = &node[T]{
+			value: value,
+		}
+		return
+	}
 	for current := list.firstNode; current != nil; current = current.next {
 		if current.next == nil {
 			current.next = &node[T]{
 				value: value,
 			}
+			return
 		}
 	}
 }
