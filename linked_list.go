@@ -18,17 +18,25 @@ func (list *LinkedList[T]) Add(value T, index ...int) {
 		insert = index[0]
 	}
 
+	if list.firstNode == nil {
+		list.firstNode = &node[T]{
+			value: value,
+		}
+		return
+	}
+
 	for i, current := 0, list.firstNode; current != nil; i, current = i+1, current.next {
 		if current.next == nil {
 			current.next = &node[T]{
 				value: value,
 			}
+			return
 		} else if i == insert {
 			current.next = &node[T]{
 				value: value,
 				next:  current.next,
 			}
-			break
+			return
 		}
 	}
 
@@ -272,7 +280,7 @@ func (list *LinkedList[T]) Size(value T) int {
 
 // Object[]	toArray()
 // Returns an array containing all of the elements in this list in proper sequence (from first to last element).
-func (list *LinkedList[T]) ToArray(value T) []T {
+func (list *LinkedList[T]) ToArray() []T {
 	var arr []T
 	for current := list.firstNode; current != nil; current = current.next {
 		arr = append(arr, current.value)
