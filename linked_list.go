@@ -13,28 +13,40 @@ type node[T any] struct {
 // Appends the specified element to the end of this list.
 // Inserts the specified element at the specified position in this list if the index is smaller than the length of the list.
 func (list *LinkedList[T]) Add(value T, index ...int) {
-	insert := -1
-	if len(index) == 1 {
-		insert = index[0]
-	}
-
-	if list.firstNode == nil {
-		list.firstNode = &node[T]{
-			value: value,
-		}
+	if len(index) > 1 {
 		return
 	}
 
-	for i, current := 0, list.firstNode; current != nil; i, current = i+1, current.next {
-		if current.next == nil {
-			current.next = &node[T]{
+	var insert *int
+	if len(index) == 1 && index[0] < 0 {
+		return
+	} else if len(index) == 1 && index[0] >= 0 {
+		insert = &index[0]
+	}
+
+	if list.firstNode == nil {
+		if insert == nil || (insert != nil && *insert == 0) {
+			list.firstNode = &node[T]{
 				value: value,
 			}
 			return
-		} else if i == insert {
+		}
+	}
+
+	for i, current := 0, list.firstNode; current != nil; i, current = i+1, current.next {
+		if insert != nil && i == *insert {
 			current.next = &node[T]{
 				value: value,
 				next:  current.next,
+			}
+			return
+		}
+		if current.next == nil && insert != nil {
+			return
+		}
+		if current.next == nil {
+			current.next = &node[T]{
+				value: value,
 			}
 			return
 		}

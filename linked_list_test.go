@@ -5,28 +5,100 @@ import (
 )
 
 func TestAdd(t *testing.T) {
-	var tests = []struct {
-		input    int   // input
+	var tests1 = []struct {
+		input    int // input
+		list     []int
 		expected []int // expected result
 	}{
-		{1, []int{1}},
-		{2, []int{1, 2}},
-		{3, []int{1, 2, 3}},
+		{1, []int{}, []int{1}},
+		{1, []int{1}, []int{1, 1}},
+		{1, []int{1, 2}, []int{1, 2, 1}},
 	}
 
-	target := new(LinkedList[int])
-	for tid, tt := range tests {
-		target.Add(tt.input)
-		result := target.ToArray()
-		if len(result) != len(tt.expected) {
-			t.Fatalf("test case %v not equal length, actual: %v; expected: %v", tid, len(result), len(tt.expected))
-		}
-		for i := 0; i < len(result); i++ {
-			if result[i] != tt.expected[i] {
-				t.Fatalf("test case %v not equal at element %v, actual: %v; expected: %v", tid, i, result[i], tt.expected[i])
+	t.Run("TestAdd without index", func(t *testing.T) {
+		for tid, tt := range tests1 {
+			target := new(LinkedList[int])
+			for _, v := range tt.list {
+				target.Add(v)
+			}
+			target.Add(tt.input)
+			result := target.ToArray()
+			if len(result) != len(tt.expected) {
+				t.Fatalf("test case %v not equal length, actual: %v; expected: %v", tid, len(result), len(tt.expected))
+			}
+			for i := 0; i < len(result); i++ {
+				if result[i] != tt.expected[i] {
+					t.Fatalf("test case %v not equal at element %v, actual: %v; expected: %v", tid, i, result[i], tt.expected[i])
+				}
 			}
 		}
+	})
+
+	var tests2 = []struct {
+		input    int // input
+		index    int
+		list     []int
+		expected []int // expected result
+	}{
+		{1, -1, []int{}, []int{}},
+		{1, 0, []int{}, []int{1}},
+		{1, 1, []int{}, []int{}},
+		{1, -1, []int{1}, []int{1}},
+		{1, 0, []int{1}, []int{1, 1}},
+		{1, 1, []int{1}, []int{1}},
+		{1, -1, []int{1, 2}, []int{1, 2}},
+		{1, 0, []int{1, 2}, []int{1, 1, 2}},
+		{1, 1, []int{1, 2}, []int{1, 2, 1}},
+		{1, 2, []int{1, 2}, []int{1, 2}},
 	}
+
+	t.Run("TestAdd with one index", func(t *testing.T) {
+		for tid, tt := range tests2 {
+			target := new(LinkedList[int])
+			for _, v := range tt.list {
+				target.Add(v)
+			}
+			target.Add(tt.input, tt.index)
+			result := target.ToArray()
+			if len(result) != len(tt.expected) {
+				t.Fatalf("test case %v not equal length, actual: %v; expected: %v", tid, len(result), len(tt.expected))
+			}
+			for i := 0; i < len(result); i++ {
+				if result[i] != tt.expected[i] {
+					t.Fatalf("test case %v not equal at element %v, actual: %v; expected: %v", tid, i, result[i], tt.expected[i])
+				}
+			}
+		}
+	})
+
+	var tests3 = []struct {
+		input    int // input
+		indexes  []int
+		list     []int
+		expected []int // expected result
+	}{
+		{1, []int{0, 1}, []int{}, []int{}},
+		{1, []int{0, 1}, []int{1}, []int{1}},
+		{1, []int{0, 1}, []int{1, 2}, []int{1, 2}},
+	}
+	t.Run("TestAdd with more than one index", func(t *testing.T) {
+		for tid, tt := range tests3 {
+			target := new(LinkedList[int])
+			for _, v := range tt.list {
+				target.Add(v)
+			}
+			target.Add(tt.input, tt.indexes...)
+			result := target.ToArray()
+			if len(result) != len(tt.expected) {
+				t.Fatalf("test case %v not equal length, actual: %v; expected: %v", tid, len(result), len(tt.expected))
+			}
+			for i := 0; i < len(result); i++ {
+				if result[i] != tt.expected[i] {
+					t.Fatalf("test case %v not equal at element %v, actual: %v; expected: %v", tid, i, result[i], tt.expected[i])
+				}
+			}
+		}
+	})
 }
 
 func TestAddAll(t *testing.T) {
