@@ -485,3 +485,302 @@ func TestRemove(t *testing.T) {
 		}
 	}
 }
+
+func TestRemoveValue(t *testing.T) {
+	var tests = []struct {
+		input    int // input
+		list     []int
+		expected []int // expected result
+	}{
+		{-1, []int{}, []int{}},
+		{0, []int{}, []int{}},
+		{1, []int{}, []int{}},
+		{-1, []int{1}, []int{1}},
+		{0, []int{1}, []int{1}},
+		{1, []int{1}, []int{}},
+		{-1, []int{1, 2, 3}, []int{1, 2, 3}},
+		{1, []int{1, 2, 3}, []int{2, 3}},
+		{2, []int{1, 2, 3}, []int{1, 3}},
+		{3, []int{1, 2, 3}, []int{1, 2}},
+		{2, []int{1, 2, 3, 2}, []int{1, 3, 2}},
+		{2, []int{1, 2, 2, 2, 3, 2}, []int{1, 2, 2, 3, 2}},
+	}
+
+	for tid, tt := range tests {
+		target := new(LinkedList[int])
+		for _, v := range tt.list {
+			target.Add(v)
+		}
+		target.RemoveValue(tt.input)
+		result := target.ToArray()
+		if len(result) != len(tt.expected) {
+			t.Fatalf("test case %v not equal length, actual: %v; expected: %v", tid, len(result), len(tt.expected))
+		}
+		for i := 0; i < len(result); i++ {
+			if result[i] != tt.expected[i] {
+				t.Fatalf("test case %v not equal at element %v, actual: %v; expected: %v", tid, i, result[i], tt.expected[i])
+			}
+		}
+	}
+}
+
+func TestRemoveFirst(t *testing.T) {
+	var tests = []struct {
+		list     []int
+		expected []int // expected result
+		exists   bool
+		value    int
+	}{
+		{[]int{}, []int{}, false, 0},
+		{[]int{1}, []int{}, true, 1},
+		{[]int{1, 1}, []int{1}, true, 1},
+		{[]int{1, 2}, []int{2}, true, 1},
+		{[]int{1, 2, 3}, []int{2, 3}, true, 1},
+		{[]int{2, 2, 2}, []int{2, 2}, true, 2},
+	}
+
+	for tid, tt := range tests {
+		target := new(LinkedList[int])
+		for _, v := range tt.list {
+			target.Add(v)
+		}
+		value := target.RemoveFirst()
+		result := target.ToArray()
+		if len(result) != len(tt.expected) {
+			t.Fatalf("test case %v not equal length, actual: %v; expected: %v", tid, len(result), len(tt.expected))
+		}
+		for i := 0; i < len(result); i++ {
+			if result[i] != tt.expected[i] {
+				t.Fatalf("test case %v not equal at element %v, actual: %v; expected: %v", tid, i, result[i], tt.expected[i])
+			}
+		}
+		if value == nil && tt.exists {
+			t.Fatalf("test case %v not equal, actual: %v; expected: %v", tid, value, tt.exists)
+		}
+		if value != nil && !tt.exists {
+			t.Fatalf("test case %v not equal, actual: %v; expected: %v", tid, value, tt.exists)
+			if value != nil && (*value != tt.value) {
+				t.Fatalf("test case %v not equal, actual: %v; expected: %v", tid, *value, tt.value)
+			}
+		}
+	}
+}
+
+func TestRemoveFirstOccurrence(t *testing.T) {
+	var tests = []struct {
+		input    int // input
+		list     []int
+		expected []int // expected result
+	}{
+		{1, []int{}, []int{}},
+		{-1, []int{1}, []int{1}},
+		{1, []int{1}, []int{}},
+		{-1, []int{1, 1}, []int{1, 1}},
+		{1, []int{1, 1}, []int{1}},
+		{-1, []int{1, 2, 3}, []int{1, 2, 3}},
+		{1, []int{1, 2, 3}, []int{2, 3}},
+		{2, []int{1, 2, 3}, []int{1, 3}},
+		{3, []int{1, 2, 3}, []int{1, 2}},
+		{-1, []int{1, 2, 1}, []int{1, 2, 1}},
+		{1, []int{1, 2, 1}, []int{2, 1}},
+		{-1, []int{1, 2, 1, 2, 1}, []int{1, 2, 1, 2, 1}},
+		{1, []int{1, 2, 1, 2, 1}, []int{2, 1, 2, 1}},
+	}
+
+	for tid, tt := range tests {
+		target := new(LinkedList[int])
+		for _, v := range tt.list {
+			target.Add(v)
+		}
+		target.RemoveFirstOccurrence(tt.input)
+		result := target.ToArray()
+		if len(result) != len(tt.expected) {
+			t.Fatalf("test case %v not equal length, actual: %v; expected: %v", tid, len(result), len(tt.expected))
+		}
+		for i := 0; i < len(result); i++ {
+			if result[i] != tt.expected[i] {
+				t.Fatalf("test case %v not equal at element %v, actual: %v; expected: %v", tid, i, result[i], tt.expected[i])
+			}
+		}
+	}
+}
+
+func TestRemoveLast(t *testing.T) {
+	var tests = []struct {
+		list     []int
+		expected []int // expected result
+		exists   bool
+		value    int
+	}{
+		{[]int{}, []int{}, false, 0},
+		{[]int{1}, []int{}, true, 1},
+		{[]int{1, 1}, []int{1}, true, 1},
+		{[]int{1, 2}, []int{1}, true, 2},
+		{[]int{1, 2, 3}, []int{1, 2}, true, 3},
+		{[]int{2, 2, 2}, []int{2, 2}, true, 2},
+	}
+
+	for tid, tt := range tests {
+		target := new(LinkedList[int])
+		for _, v := range tt.list {
+			target.Add(v)
+		}
+		value := target.RemoveLast()
+		result := target.ToArray()
+		if len(result) != len(tt.expected) {
+			t.Fatalf("test case %v not equal length, actual: %v; expected: %v", tid, len(result), len(tt.expected))
+		}
+		for i := 0; i < len(result); i++ {
+			if result[i] != tt.expected[i] {
+				t.Fatalf("test case %v not equal at element %v, actual: %v; expected: %v", tid, i, result[i], tt.expected[i])
+			}
+		}
+		if value == nil && tt.exists {
+			t.Fatalf("test case %v not equal, actual: %v; expected: %v", tid, value, tt.exists)
+		}
+		if value != nil && !tt.exists {
+			t.Fatalf("test case %v not equal, actual: %v; expected: %v", tid, value, tt.exists)
+			if value != nil && (*value != tt.value) {
+				t.Fatalf("test case %v not equal, actual: %v; expected: %v", tid, *value, tt.value)
+			}
+		}
+	}
+}
+
+func TestRemoveLastOccurrence(t *testing.T) {
+	var tests = []struct {
+		input    int // input
+		list     []int
+		expected []int // expected result
+	}{
+		{1, []int{}, []int{}},
+		{-1, []int{1}, []int{1}},
+		{1, []int{1}, []int{}},
+		{-1, []int{1, 1}, []int{1, 1}},
+		{1, []int{1, 1}, []int{1}},
+		{-1, []int{1, 2, 3}, []int{1, 2, 3}},
+		{1, []int{1, 2, 3}, []int{2, 3}},
+		{2, []int{1, 2, 3}, []int{1, 3}},
+		{3, []int{1, 2, 3}, []int{1, 2}},
+		{-1, []int{1, 2, 1}, []int{1, 2, 1}},
+		{1, []int{1, 2, 1}, []int{1, 2}},
+		{-1, []int{1, 2, 1, 2, 1}, []int{1, 2, 1, 2, 1}},
+		{1, []int{1, 2, 1, 2, 1}, []int{1, 2, 1, 2}},
+	}
+
+	for tid, tt := range tests {
+		target := new(LinkedList[int])
+		for _, v := range tt.list {
+			target.Add(v)
+		}
+		target.RemoveLastOccurrence(tt.input)
+		result := target.ToArray()
+		if len(result) != len(tt.expected) {
+			t.Fatalf("test case %v not equal length, actual: %v; expected: %v", tid, len(result), len(tt.expected))
+		}
+		for i := 0; i < len(result); i++ {
+			if result[i] != tt.expected[i] {
+				t.Fatalf("test case %v not equal at element %v, actual: %v; expected: %v", tid, i, result[i], tt.expected[i])
+			}
+		}
+	}
+}
+
+func TestSet(t *testing.T) {
+	var tests = []struct {
+		index    int // input
+		value    int
+		list     []int
+		expected []int // expected result
+	}{
+		{-1, 1, []int{}, []int{}},
+		{0, 1, []int{}, []int{}},
+		{1, 1, []int{}, []int{}},
+		{-1, 1, []int{1}, []int{1}},
+		{0, 1, []int{1}, []int{1}},
+		{0, 2, []int{1}, []int{2}},
+		{1, 1, []int{1}, []int{1}},
+		{-1, 1, []int{1, 2, 3}, []int{1, 2, 3}},
+		{0, 1, []int{1, 2, 3}, []int{1, 2, 3}},
+		{0, 2, []int{1, 2, 3}, []int{2, 2, 3}},
+		{1, 1, []int{1, 2, 3}, []int{1, 1, 3}},
+		{1, 2, []int{1, 2, 3}, []int{1, 2, 3}},
+		{2, 1, []int{1, 2, 3}, []int{1, 2, 1}},
+		{2, 3, []int{1, 2, 3}, []int{1, 2, 3}},
+		{3, 3, []int{1, 2, 3}, []int{1, 2, 3}},
+	}
+
+	for tid, tt := range tests {
+		target := new(LinkedList[int])
+		for _, v := range tt.list {
+			target.Add(v)
+		}
+		target.Set(tt.index, tt.value)
+		result := target.ToArray()
+		if len(result) != len(tt.expected) {
+			t.Fatalf("test case %v not equal length, actual: %v; expected: %v", tid, len(result), len(tt.expected))
+		}
+		for i := 0; i < len(result); i++ {
+			if result[i] != tt.expected[i] {
+				t.Fatalf("test case %v not equal at element %v, actual: %v; expected: %v", tid, i, result[i], tt.expected[i])
+			}
+		}
+	}
+}
+
+func TestSize(t *testing.T) {
+	var tests = []struct {
+		list     []int
+		expected int // expected result
+	}{
+
+		{[]int{}, 0},
+		{[]int{1}, 1},
+		{[]int{1, 2}, 2},
+		{[]int{1, 1}, 2},
+		{[]int{1, 2, 3}, 3},
+		{[]int{1, 1, 1}, 3},
+	}
+
+	for tid, tt := range tests {
+		target := new(LinkedList[int])
+		for _, v := range tt.list {
+			target.Add(v)
+		}
+		result := target.Size()
+		if result != tt.expected {
+			t.Fatalf("test case %v not equal, actual: %v; expected: %v", tid, result, tt.expected)
+		}
+	}
+}
+
+func TestToArray(t *testing.T) {
+	var tests = []struct {
+		list     []int
+		expected []int // expected result
+	}{
+
+		{[]int{}, []int{}},
+		{[]int{1}, []int{1}},
+		{[]int{1, 2}, []int{1, 2}},
+		{[]int{1, 1}, []int{1, 1}},
+		{[]int{1, 2, 3}, []int{1, 2, 3}},
+		{[]int{1, 1, 1}, []int{1, 1, 1}},
+	}
+
+	for tid, tt := range tests {
+		target := new(LinkedList[int])
+		for _, v := range tt.list {
+			target.Add(v)
+		}
+		result := target.ToArray()
+		if len(result) != len(tt.expected) {
+			t.Fatalf("test case %v not equal length, actual: %v; expected: %v", tid, len(result), len(tt.expected))
+		}
+		for i := 0; i < len(result); i++ {
+			if result[i] != tt.expected[i] {
+				t.Fatalf("test case %v not equal at element %v, actual: %v; expected: %v", tid, i, result[i], tt.expected[i])
+			}
+		}
+	}
+}

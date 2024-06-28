@@ -224,7 +224,7 @@ func (list *LinkedList[T]) Remove(index int) {
 		list.firstNode = list.firstNode.next
 	}
 	if index > 0 && list.firstNode != nil {
-		for i, current := 0, list.firstNode.next; current != nil; i, current = i+1, current.next {
+		for i, current := 0, list.firstNode; current != nil; i, current = i+1, current.next {
 			if i+1 == index && current.next != nil {
 				current.next = current.next.next
 			}
@@ -235,6 +235,10 @@ func (list *LinkedList[T]) Remove(index int) {
 // removeValue(Object o)
 // Removes the first occurrence of the specified element from this list, if it is present.
 func (list *LinkedList[T]) RemoveValue(value T) {
+	if list.firstNode != nil && list.firstNode.value == value {
+		list.firstNode = list.firstNode.next
+		return
+	}
 	for current := list.firstNode; current != nil; current = current.next {
 		if current.next != nil && current.next.value == value {
 			current.next = current.next.next
@@ -268,10 +272,15 @@ func (list *LinkedList[T]) RemoveLast() *T {
 	if list.firstNode == nil {
 		return result
 	}
-	for current := list.firstNode; current != nil; current = current.next {
-		if current.next == nil {
-			result = &list.firstNode.value
-			list.firstNode = nil
+	if list.firstNode != nil && list.firstNode.next == nil {
+		result = &list.firstNode.value
+		list.firstNode = nil
+		return result
+	}
+	for current := list.firstNode; current.next != nil; current = current.next {
+		if current.next.next == nil {
+			result = &current.next.value
+			current.next = nil
 			return result
 		}
 	}
@@ -296,10 +305,11 @@ func (list *LinkedList[T]) Set(index int, value T) {
 
 // int	size()
 // Returns the number of elements in this list.
-func (list *LinkedList[T]) Size(value T) int {
+func (list *LinkedList[T]) Size() int {
+
 	for i, current := 0, list.firstNode; current != nil; i, current = i+1, current.next {
 		if current.next == nil {
-			return i
+			return i + 1
 		}
 	}
 	return 0
