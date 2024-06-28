@@ -45,20 +45,26 @@ func (list *LinkedList[T]) Add(value T, index ...int) {
 // void	addAll(Collection<? extends E> c)
 // Appends all of the elements in the specified collection to the end of this list, in the order that they are returned by the specified collection's iterator.
 func (list *LinkedList[T]) AddAll(value []T, index ...int) {
-	insert := -1
-	if len(index) == 1 && index[0] >= 0 {
-		insert = index[0]
-	}
-
 	if len(value) <= 0 {
 		return
 	}
 
+	if len(index) > 1 {
+		return
+	}
+
+	var insert *int
+	if len(index) == 1 && index[0] < 0 {
+		return
+	} else if len(index) == 1 && index[0] >= 0 {
+		insert = &index[0]
+	}
+
 	if list.firstNode == nil {
-		list.firstNode = &node[T]{
-			value: value[0],
-		}
-		if len(value) > 1 {
+		if insert == nil || (insert != nil && *insert == 0) {
+			list.firstNode = &node[T]{
+				value: value[0],
+			}
 			for i, current := 1, list.firstNode; i < len(value); i, current = i+1, current.next {
 				current.next = &node[T]{
 					value: value[i],
@@ -69,7 +75,7 @@ func (list *LinkedList[T]) AddAll(value []T, index ...int) {
 	}
 
 	for i, current := 0, list.firstNode; current != nil; i, current = i+1, current.next {
-		if i == insert {
+		if insert != nil && i == *insert {
 			nextNodeBeforeInsert := current.next
 			for _, v := range value {
 				nextNode := &node[T]{
@@ -79,6 +85,9 @@ func (list *LinkedList[T]) AddAll(value []T, index ...int) {
 				current = current.next
 			}
 			current.next = nextNodeBeforeInsert
+			return
+		}
+		if current.next == nil && insert != nil {
 			return
 		}
 		if current.next == nil {
