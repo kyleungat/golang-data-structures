@@ -940,3 +940,21 @@ func TestToArray(t *testing.T) {
 		}
 	}
 }
+
+func BenchmarkSize1(b *testing.B)      { benchmarkSize(1, b) }
+func BenchmarkSize10(b *testing.B)     { benchmarkSize(10, b) }
+func BenchmarkSize100(b *testing.B)    { benchmarkSize(100, b) }
+func BenchmarkSize1000(b *testing.B)   { benchmarkSize(1000, b) }
+func BenchmarkSize10000(b *testing.B)  { benchmarkSize(10000, b) }
+func BenchmarkSize100000(b *testing.B) { benchmarkSize(100000, b) }
+
+func benchmarkSize(size int, b *testing.B) {
+	linkedlist := new(LinkedList[int])
+	for i := 0; i < size; i++ {
+		linkedlist.Add(i)
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		linkedlist.Size()
+	}
+}
