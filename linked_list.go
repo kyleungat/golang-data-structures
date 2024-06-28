@@ -281,7 +281,7 @@ func (list *LinkedList[T]) RemoveLast() *T {
 		if current.next.next == nil {
 			result = &current.next.value
 			current.next = nil
-			return result
+			break
 		}
 	}
 	return result
