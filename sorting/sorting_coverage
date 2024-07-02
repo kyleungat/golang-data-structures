@@ -1,0 +1,21 @@
+mode: set
+golang-data-structures/sorting/bubble_sort.go:5.55,7.22 2 1
+golang-data-structures/sorting/bubble_sort.go:7.22,8.36 1 1
+golang-data-structures/sorting/bubble_sort.go:8.36,9.29 1 1
+golang-data-structures/sorting/bubble_sort.go:9.29,14.5 3 1
+golang-data-structures/sorting/bubble_sort.go:16.3,16.16 1 1
+golang-data-structures/sorting/bubble_sort.go:18.2,18.14 1 1
+golang-data-structures/sorting/insertion_sort.go:5.58,6.36 1 1
+golang-data-structures/sorting/insertion_sort.go:6.36,7.33 1 1
+golang-data-structures/sorting/insertion_sort.go:7.33,8.29 1 1
+golang-data-structures/sorting/insertion_sort.go:8.29,12.5 3 1
+golang-data-structures/sorting/insertion_sort.go:12.10,13.10 1 1
+golang-data-structures/sorting/insertion_sort.go:17.2,17.14 1 1
+golang-data-structures/sorting/selection_sort.go:5.58,7.28 2 1
+golang-data-structures/sorting/selection_sort.go:7.28,10.46 3 1
+golang-data-structures/sorting/selection_sort.go:10.46,12.22 1 1
+golang-data-structures/sorting/selection_sort.go:12.22,15.5 2 1
+golang-data-structures/sorting/selection_sort.go:18.3,18.30 1 1
+golang-data-structures/sorting/selection_sort.go:18.30,21.4 2 1
+golang-data-structures/sorting/selection_sort.go:23.3,23.13 1 1
+golang-data-structures/sorting/selection_sort.go:25.2,25.14 1 1
